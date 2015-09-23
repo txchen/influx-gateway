@@ -1,11 +1,15 @@
 {
   "name": "influx-gateway",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "an influxdb gateway, takes json as input",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "lint": "eslint lib/*"
+  },
+  "bin": {
+    "influx-gateway": "node ./test.js",
+    "igw": "node ./test.js"
   },
   "repository": {
     "type": "git",
