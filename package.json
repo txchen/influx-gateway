@@ -1,0 +1,35 @@
+{
+  "name": "influx-gateway",
+  "version": "1.0.0",
+  "description": "an influxdb gateway, takes json as input",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint lib/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/txchen/influx-gateway.git"
+  },
+  "keywords": [
+    "influxdb",
+    "json",
+    "gateway"
+  ],
+  "author": "Tianxiang Chen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/txchen/influx-gateway/issues"
+  },
+  "homepage": "https://github.com/txchen/influx-gateway#readme",
+  "dependencies": {
+    "babel": "^5.8.23",
+    "express": "^4.13.3",
+    "morgan": "^1.6.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^4.1.3",
+    "eslint-config-airbnb": "0.0.8",
+    "nodemon": "^1.7.0"
+  }
+}
