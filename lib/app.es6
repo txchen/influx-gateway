@@ -1,6 +1,7 @@
 import express from 'express'
 import logger from 'morgan'
 import api from './api'
+import defaultConfig from './defaultConfig'
 
 const app = express()
 app.set('trust proxy', 'loopback')
@@ -9,10 +10,7 @@ app.set('trust proxy', 'loopback')
 app.use(logger('dev'))
 
 // TODO: implement configuration
-const config = {
-  influx_url: 'http://test:test@localhost:8086',
-  db_name: 'mydb',
-}
+const config = defaultConfig
 app.use('/', api(config))
 
 // error handling, should be after normal middleware
