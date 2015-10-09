@@ -2,7 +2,9 @@
 /* eslint-disable */
 
 // entry point, do not use babel syntax here in this file, so that 'node' can launch this.
-require('babel/register')
+require('babel/register')({
+  stage: 1
+})
 
 // read .env file, for azure, set properties in portal
 //require('dotenv').config({silent: true})

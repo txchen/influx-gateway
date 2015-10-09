@@ -9,18 +9,21 @@ app.set('trust proxy', 'loopback')
 app.use(logger('dev'))
 
 // TODO: implement configuration
-app.use('/', api())
+const config = {
+  influx_url: 'http://test:test@localhost:8086',
+  db_name: 'mydb',
+}
+app.use('/', api(config))
 
 // TODO: investigate express.errorHandler
 /* eslint no-unused-vars: 0 */
 // error handling, should be after normal middleware
 app.use((err, req, res, next) => {
-  if (err.status) {
-    res.status(err.status).send(err.statusText)
-  } else {
-    console.error(err.stack)
-    res.status(500).send('Internal Error')
-  }
+  res.status(err.status || 500)
+  res.json({
+    reason: err.message,
+    stack: err.stack,
+  })
 })
 
 export default app
