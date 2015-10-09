@@ -3,7 +3,8 @@
 
 // entry point, do not use ES6 syntax here in this file, so that 'node' can launch this.
 require('babel/register')({
-  stage: 1
+  stage: 1,
+  ignore: /influx-gateway\/node_modules/
 })
 var defaultConfig = require('./defaultConfig.es6')
 var program = require('commander')
