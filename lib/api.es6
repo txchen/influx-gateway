@@ -31,7 +31,7 @@ export default (config) => {
     }
   }))
 
-  router.post('/event', (req, res) => {
+  router.post('/event', (req, _res) => {
 
   })
 

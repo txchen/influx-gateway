@@ -15,10 +15,8 @@ const config = {
 }
 app.use('/', api(config))
 
-// TODO: investigate express.errorHandler
-/* eslint no-unused-vars: 0 */
 // error handling, should be after normal middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   res.status(err.status || 500)
   res.json({
     reason: err.message,
