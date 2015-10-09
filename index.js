@@ -23,20 +23,22 @@ function getConfig(configFile) {
 function main() {
   program.version('0.0.1')
     .option('-c, --config [config]', 'config file location')
+  program.command('genconfig')
+    .description('print config tempalte')
+    .action(function() {
+      console.log(JSON.stringify(defaultConfig, null, 2))
+      process.exit(0)
+    })
   program.parse(process.argv)
 
   var config = defaultConfig
   if (program.config) {
-    var cfg = getConfig(program.config)
-    extend(config, cfg)
+    extend(config, getConfig(program.config))
   }
 
-  var port = config.port || 6789
-  var host = config.host || 'localhost'
-
   var server = require('./lib/app')(config)
-  server.listen(port, host, function () {
-    console.log('influx-gateway listening on http://' + host + ':' + port)
+  server.listen(config.port, config.host, function() {
+    console.log('influx-gateway listening on http://' + config.host + ':' + config.port)
   })
 }
 
