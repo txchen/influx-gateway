@@ -13,6 +13,7 @@ export default (config) => {
 
   // error handling, should be after normal middleware
   app.use((err, req, res, _next) => {
+    // TODO: trace error
     res.status(err.status || 500)
     res.json({
       reason: err.message,
