@@ -6,6 +6,7 @@ class LineProtocol {
   tranform(json) {
     validate(json)
     const { measurement, tags, fields } = parseInput(json)
+    return 'dummy'
   }
 
   validate(json) {
@@ -66,6 +67,12 @@ class LineProtocol {
       fields.count = 1 // influxdb must have at least one field, use count=1i if no fileds in input
     }
     return { measurement, tags, fields }
+  }
+
+  buildKeyExpression(measurement, tags) {
+    let result = measurement
+    Object.keys(tags).sort().forEach(tagName => { result += `,${tagName}=${tags[tagName]}` })
+    return result
   }
 
   isValidFieldValue(obj) {

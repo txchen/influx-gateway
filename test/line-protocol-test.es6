@@ -124,4 +124,18 @@ describe('LineProtocol', () => {
       lp.parseInput({ _name: 'test' }).fields.should.eql({ count: 1 })
     })
   })
+
+  describe('buildKeyExpression', () => {
+    it('should work if no tags are specified', () => {
+      lp.buildKeyExpression('abc', {}).should.equal('abc')
+    })
+
+    it('should work if tags are specified', () => {
+      lp.buildKeyExpression('abc', { cpu: '1', server: '2' }).should.equal('abc,cpu=1,server=2')
+    })
+
+    it('should generate expression with tag key ordered', () => {
+      lp.buildKeyExpression('abc', { b: 'b', a: 'a', c: 'c' }).should.equal('abc,a=a,b=b,c=c')
+    })
+  })
 })
