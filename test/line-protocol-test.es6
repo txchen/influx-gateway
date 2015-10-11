@@ -77,31 +77,37 @@ describe('LineProtocol', () => {
     })
 
     it('should throw error if tag name is invalid', () => {
-      validateShouldThrowError({ _name: '', 'A+B': 'bar' })
-      validateShouldThrowError({ _name: '', 'A+B': 'bar', 'foo': 'bar' })
-      validateShouldThrowError({ _name: '', 'A(D)': 'bar', 'foo': 'bar' })
+      validateShouldThrowError({ _name: 'a', 'A+B': 'bar' })
+      validateShouldThrowError({ _name: 'a', 'A+B': 'bar', 'foo': 'bar' })
+      validateShouldThrowError({ _name: 'a', 'A(D)': 'bar', 'foo': 'bar' })
     })
 
     it('should throw error if tag value is invalid', () => {
-      validateShouldThrowError({ _name: '', 'abc': '' })
-      validateShouldThrowError({ _name: '', 'abc': 1 })
-      validateShouldThrowError({ _name: '', 'abc': [] })
-      validateShouldThrowError({ _name: '', 'abc': {} })
-      validateShouldThrowError({ _name: '', 'abc': ' ' })
-      validateShouldThrowError({ _name: '', 'abc': 'abc()' })
-      validateShouldThrowError({ _name: '', 'abc': 'abc\\' })
+      validateShouldThrowError({ _name: 'a', 'abc': '' })
+      validateShouldThrowError({ _name: 'a', 'abc': 1 })
+      validateShouldThrowError({ _name: 'a', 'abc': [] })
+      validateShouldThrowError({ _name: 'a', 'abc': {} })
+      validateShouldThrowError({ _name: 'a', 'abc': ' ' })
+      validateShouldThrowError({ _name: 'a', 'abc': 'abc()' })
+      validateShouldThrowError({ _name: 'a', 'abc': 'abc\\' })
     })
 
     it('should throw error if field name is invalid', () => {
-      validateShouldThrowError({ _name: '', '__a+b': 'a' })
-      validateShouldThrowError({ _name: '', '__a(b)': 'a' })
+      validateShouldThrowError({ _name: 'a', '__a+b': 'a' })
+      validateShouldThrowError({ _name: 'a', '__a(b)': 'a' })
     })
 
     it('should throw error if field value type is invalid', () => {
-      validateShouldThrowError({ _name: '', '__abc': [] })
-      validateShouldThrowError({ _name: '', '__abc': null })
-      validateShouldThrowError({ _name: '', '__abc': undefined })
-      validateShouldThrowError({ _name: '', '__abc': {} })
+      validateShouldThrowError({ _name: 'a', '__abc': [] })
+      validateShouldThrowError({ _name: 'a', '__abc': null })
+      validateShouldThrowError({ _name: 'a', '__abc': undefined })
+      validateShouldThrowError({ _name: 'a', '__abc': {} })
+    })
+  })
+
+  describe('parseInput', () => {
+    it('should parse the measurement name', () => {
+      lp.parseInput({ _name: 'abc' }).measurement.should.equal('abc')
     })
   })
 })

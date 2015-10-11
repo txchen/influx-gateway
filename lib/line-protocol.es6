@@ -5,6 +5,7 @@ const keyRegex = /^[a-zA-Z0-9][\w-\.\/]*$/
 class LineProtocol {
   tranform(json) {
     validate(json)
+    const { measurement, tags, fields } = parseInput(json)
   }
 
   validate(json) {
@@ -25,7 +26,7 @@ class LineProtocol {
 
     // validate tags and fields
     for (const propertyName in json) {
-      if (/^a-zA-Z0-9/.test(propertyName)) { // propertyName start with a-zA-Z0-9, recognized as tag
+      if (/^[a-zA-Z0-9]/.test(propertyName)) { // propertyName start with a-zA-Z0-9, recognized as tag
         if (!keyRegex.test(propertyName)) {
           throw new IGWValidationError('tag name invalid: ' + propertyName)
         }
@@ -36,7 +37,7 @@ class LineProtocol {
         if (!keyRegex.test(json[propertyName])) {
           throw new IGWValidationError('value of tag: "${propertyName}" is invalid')
         }
-      } else if (/^__a-zA-Z0-9/.test(propertyName)) { // propertyName start with __[a-zA-Z0-9], recognized as field
+      } else if (/^__[a-zA-Z0-9]/.test(propertyName)) { // propertyName start with __[a-zA-Z0-9], recognized as field
         const fieldName = propertyName.substring(2)
         if (!keyRegex.test(fieldName)) {
           throw new IGWValidationError('field name invalid: ' + propertyName)
@@ -46,6 +47,14 @@ class LineProtocol {
         }
       }
     }
+  }
+
+  // returns measurement, tags[], fields[]
+  parseInput(json) {
+    const measurement = json._name
+    const tags = []
+    const fields = []
+    return { measurement, tags, fields }
   }
 
   isValidFieldValue(obj) {
