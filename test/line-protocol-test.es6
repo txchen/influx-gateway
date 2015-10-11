@@ -27,6 +27,8 @@ describe('LineProtocol', () => {
       validateOK({ _name: 'a-c' })
       validateOK({ _name: 'a/c' })
       validateOK({ _name: 'A_B/C-a-b_10.' })
+      validateOK({ _name: 'abc', t1: 'v1', t2: 'v2' })
+      validateOK({ _name: 'abc', t1: 'v1', __f1: 1, __f2: true, __f3: '', __f4: 's', __f5: 1.1, __f6: -1.1 })
     })
 
     it('should throw error if input is string', () => {
@@ -63,11 +65,43 @@ describe('LineProtocol', () => {
       validateShouldThrowError({ _name: '' })
       validateShouldThrowError({ _name: null })
       validateShouldThrowError({ _name: undefined })
+      validateShouldThrowError({ _name: 1 })
+      validateShouldThrowError({ _name: 1.1 })
+      validateShouldThrowError({ _name: [] })
+      validateShouldThrowError({ _name: {} })
       validateShouldThrowError({ _name: ' ' })
       validateShouldThrowError({ _name: ' a' })
       validateShouldThrowError({ _name: '.' })
       validateShouldThrowError({ _name: 'abc()' })
       validateShouldThrowError({ _name: 'abc\\' })
+    })
+
+    it('should throw error if tag name is invalid', () => {
+      validateShouldThrowError({ _name: '', 'A+B': 'bar' })
+      validateShouldThrowError({ _name: '', 'A+B': 'bar', 'foo': 'bar' })
+      validateShouldThrowError({ _name: '', 'A(D)': 'bar', 'foo': 'bar' })
+    })
+
+    it('should throw error if tag value is invalid', () => {
+      validateShouldThrowError({ _name: '', 'abc': '' })
+      validateShouldThrowError({ _name: '', 'abc': 1 })
+      validateShouldThrowError({ _name: '', 'abc': [] })
+      validateShouldThrowError({ _name: '', 'abc': {} })
+      validateShouldThrowError({ _name: '', 'abc': ' ' })
+      validateShouldThrowError({ _name: '', 'abc': 'abc()' })
+      validateShouldThrowError({ _name: '', 'abc': 'abc\\' })
+    })
+
+    it('should throw error if field name is invalid', () => {
+      validateShouldThrowError({ _name: '', '__a+b': 'a' })
+      validateShouldThrowError({ _name: '', '__a(b)': 'a' })
+    })
+
+    it('should throw error if field value type is invalid', () => {
+      validateShouldThrowError({ _name: '', '__abc': [] })
+      validateShouldThrowError({ _name: '', '__abc': null })
+      validateShouldThrowError({ _name: '', '__abc': undefined })
+      validateShouldThrowError({ _name: '', '__abc': {} })
     })
   })
 })
