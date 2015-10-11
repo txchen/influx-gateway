@@ -4,9 +4,9 @@ const keyRegex = /^[a-zA-Z0-9][\w-\.\/]*$/
 
 class LineProtocol {
   tranform(json) {
-    validate(json)
-    const { measurement, tags, fields } = parseInput(json)
-    return 'dummy'
+    this.validate(json)
+    const { measurement, tags, fields } = this.parseInput(json)
+    return this.buildKeyExpression(measurement, tags) + ' ' + this.buildFieldsExpression(fields)
   }
 
   validate(json) {
@@ -73,6 +73,22 @@ class LineProtocol {
     let result = measurement
     Object.keys(tags).sort().forEach(tagName => { result += `,${tagName}=${tags[tagName]}` })
     return result
+  }
+
+  buildFieldsExpression(fields) {
+    let result = ''
+    Object.keys(fields).sort().forEach(fieldName => {
+      const fieldVal = fields[fieldName]
+      if (typeof fieldVal === 'boolean' || typeof fieldVal === 'number') {
+        // NOTE: influxdb's int must have a trailing 'i', once a field is written into a series, its type cannot change.
+        // however in js, 1.0 and 1 are the same thing, so we can not ensure the values are always int or float for
+        // a field. Thus, always use float here. WTF, javascript!
+        result += `,${fieldName}=${fieldVal}`
+      } else if (typeof fieldVal === 'string') {
+        result += `,${fieldName}=${JSON.stringify(fieldVal)}`
+      }
+    })
+    return result.substring(1) // trim the leading ,
   }
 
   isValidFieldValue(obj) {

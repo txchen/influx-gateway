@@ -20,6 +20,13 @@ function validateOK(input) {
 }
 
 describe('LineProtocol', () => {
+  describe('tranform', () => {
+    it('should transform with expected result', () => {
+      lp.tranform({ _name: 'cpu', host: 'a', cluster: 'uswest', __value: 30.2, __prod: false, __weather: 'rainy' })
+        .should.equal('cpu,cluster=uswest,host=a prod=false,value=30.2,weather="rainy"')
+    })
+  })
+
   describe('validate', () => {
     it('should not throw error if input is valid', () => {
       validateOK({ _name: 'abc' })
@@ -136,6 +143,24 @@ describe('LineProtocol', () => {
 
     it('should generate expression with tag key ordered', () => {
       lp.buildKeyExpression('abc', { b: 'b', a: 'a', c: 'c' }).should.equal('abc,a=a,b=b,c=c')
+    })
+  })
+
+  describe('buildFieldsExpression', () => {
+    it('should render boolean values correctly', () => {
+      lp.buildFieldsExpression({ f1: true, f2: false }).should.equal('f1=true,f2=false')
+    })
+
+    it('should render number values correctly', () => { // always float type of influx data
+      lp.buildFieldsExpression({ f1: 1, f2: 1.1, f3: -1, f4: -100.0 }).should.equal('f1=1,f2=1.1,f3=-1,f4=-100')
+    })
+
+    it('should render string values correctly', () => {
+      lp.buildFieldsExpression({ f1: '', f2: ' ', f3: 'a c', f4: 'Z"Y' }).should.equal('f1="",f2=" ",f3="a c",f4="Z\\"Y"')
+    })
+
+    it('should render result with field name ordered', () => {
+      lp.buildFieldsExpression({ f4: 1, f3: true, f2: 1.4, f1: 'a' }).should.equal('f1="a",f2=1.4,f3=true,f4=1')
     })
   })
 })
