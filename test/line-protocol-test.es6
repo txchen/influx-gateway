@@ -5,30 +5,69 @@ import { IGWValidationError } from '../lib/error'
 chai.should()
 const lp = new LineProtocol()
 
+function validateCall(input) {
+  return () => {
+    lp.validate(input)
+  }
+}
+
+function validateShouldThrowError(input) {
+  validateCall(input).should.throw(IGWValidationError)
+}
+
+function validateOK(input) {
+  validateCall(input).should.not.throw(Error)
+}
+
 describe('LineProtocol', () => {
   describe('validate', () => {
+    it('should not throw error if input is valid', () => {
+      validateOK({ _name: 'abc' })
+      validateOK({ _name: 'abc.cde' })
+      validateOK({ _name: 'a-c' })
+      validateOK({ _name: 'a/c' })
+      validateOK({ _name: 'A_B/C-a-b_10.' })
+    })
+
     it('should throw error if input is string', () => {
-      (() => { lp.validate('s') }).should.throw(IGWValidationError)
+      validateShouldThrowError('s')
     })
 
     it('should throw error if input is int', () => {
-      () => { lp.validate(1) }.should.throw(IGWValidationError)
+      validateShouldThrowError(1)
     })
 
     it('should throw error if input is float', () => {
-      () => { lp.validate(1.1) }.should.throw(IGWValidationError)
+      validateShouldThrowError(1.1)
     })
 
     it('should throw error if input is undefined', () => {
-      () => { lp.validate(undefined) }.should.throw(IGWValidationError)
+      validateShouldThrowError(undefined)
     })
 
     it('should throw error if input is null', () => {
-      () => { lp.validate(null) }.should.throw(IGWValidationError)
+      validateShouldThrowError(null)
     })
 
     it('should throw error if input is array', () => {
-      () => { lp.validate([]) }.should.throw(IGWValidationError)
+      validateShouldThrowError([])
+    })
+
+    it('should throw error if measurement is not specified', () => {
+      validateShouldThrowError({})
+
+      validateShouldThrowError({ foo: 'bar' })
+    })
+
+    it('should throw error if measurement name is invalid', () => {
+      validateShouldThrowError({ _name: '' })
+      validateShouldThrowError({ _name: null })
+      validateShouldThrowError({ _name: undefined })
+      validateShouldThrowError({ _name: ' ' })
+      validateShouldThrowError({ _name: ' a' })
+      validateShouldThrowError({ _name: '.' })
+      validateShouldThrowError({ _name: 'abc()' })
+      validateShouldThrowError({ _name: 'abc\\' })
     })
   })
 })
