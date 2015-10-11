@@ -15,10 +15,13 @@ export default (config) => {
   app.use((err, req, res, _next) => {
     // TODO: trace error
     res.status(err.status || 500)
-    res.json({
+    const output = {
       reason: err.message,
-      stack: err.stack,
-    })
+    }
+    if (process.env.NODE_ENV === 'dev') {
+      output.stack = err.stack
+    }
+    res.json(output)
   })
 
   return app

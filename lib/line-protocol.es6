@@ -6,7 +6,12 @@ class LineProtocol {
   tranform(json) {
     this.validate(json)
     const { measurement, tags, fields } = this.parseInput(json)
-    return this.buildKeyExpression(measurement, tags) + ' ' + this.buildFieldsExpression(fields)
+    const keyExp = this.buildKeyExpression(measurement, tags)
+    let fieldExp = this.buildFieldsExpression(fields)
+    if (fieldExp === '') {
+      fieldExp = 'count=1i' // influxdb must have at least one field, use count=1i if no fields are specified.
+    }
+    return `${keyExp} ${fieldExp}`
   }
 
   validate(json) {
@@ -33,10 +38,10 @@ class LineProtocol {
         }
         // tag value must be string
         if (!this.isString(json[propertyName])) {
-          throw new IGWValidationError('value of tag: "${propertyName}" must be a string.')
+          throw new IGWValidationError(`value of tag: ${propertyName} must be a string.`)
         }
         if (!keyRegex.test(json[propertyName])) {
-          throw new IGWValidationError('value of tag: "${propertyName}" is invalid')
+          throw new IGWValidationError(`value of tag: ${propertyName} is invalid`)
         }
       } else if (/^__[a-zA-Z0-9]/.test(propertyName)) { // propertyName start with __[a-zA-Z0-9], recognized as field
         const fieldName = propertyName.substring(2)
@@ -44,7 +49,7 @@ class LineProtocol {
           throw new IGWValidationError('field name invalid: ' + propertyName)
         }
         if (!this.isValidFieldValue(json[propertyName])) {
-          throw new IGWValidationError('value of field: "${fieldName}" is invalid')
+          throw new IGWValidationError(`value of field: ${fieldName} is invalid`)
         }
       }
     }
@@ -62,9 +67,6 @@ class LineProtocol {
         const fieldName = propertyName.substring(2)
         fields[fieldName] = json[propertyName]
       }
-    }
-    if (Object.keys(fields).length === 0) {
-      fields.count = 1 // influxdb must have at least one field, use count=1i if no fileds in input
     }
     return { measurement, tags, fields }
   }

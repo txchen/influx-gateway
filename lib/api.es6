@@ -1,11 +1,16 @@
 import express from 'express'
+import bodyParser from 'body-parser'
 import awrap from 'awrap'
 import rq from 'request-promise'
 import url from 'url'
 import qs from 'querystring'
+import LineProtocol from './line-protocol'
 
 export default (config) => {
   const router = new express.Router()
+  const lp = new LineProtocol()
+
+  router.use(bodyParser.json())
 
   router.get('/ping', awrap(async (req, res) => {
     const data = {
@@ -31,9 +36,10 @@ export default (config) => {
     }
   }))
 
-  router.post('/event', (req, _res) => {
-    // check if input is json
-  })
+  router.post('/event', awrap(async (req, res) => {
+    const message = req.body
+    res.send(lp.tranform(message))
+  }))
 
   return router
 }

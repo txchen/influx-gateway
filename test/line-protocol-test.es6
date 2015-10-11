@@ -25,6 +25,11 @@ describe('LineProtocol', () => {
       lp.tranform({ _name: 'cpu', host: 'a', cluster: 'uswest', __value: 30.2, __prod: false, __weather: 'rainy' })
         .should.equal('cpu,cluster=uswest,host=a prod=false,value=30.2,weather="rainy"')
     })
+
+    it('should add count=1i if no fields are specified', () => {
+      lp.tranform({ _name: 'mem', cluster: 'uswest' })
+        .should.equal('mem,cluster=uswest count=1i')
+    })
   })
 
   describe('validate', () => {
@@ -125,10 +130,6 @@ describe('LineProtocol', () => {
     it('should parse the fields', () => {
       lp.parseInput({ _name: 'test', __f1: 1, __f2: 'v2', __f3: false, __f4: -1.2 })
         .fields.should.eql({ f1: 1, f2: 'v2', f3: false, f4: -1.2 })
-    })
-
-    it('should add count if no fields in input', () => {
-      lp.parseInput({ _name: 'test' }).fields.should.eql({ count: 1 })
     })
   })
 
