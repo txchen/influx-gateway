@@ -32,7 +32,7 @@ export default (config) => {
   }))
 
   router.post('/event', (req, _res) => {
-
+    // check if input is json
   })
 
   return router
