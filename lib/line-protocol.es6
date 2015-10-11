@@ -49,11 +49,22 @@ class LineProtocol {
     }
   }
 
-  // returns measurement, tags[], fields[]
+  // returns measurement, tags{}, fields{}
   parseInput(json) {
     const measurement = json._name
-    const tags = []
-    const fields = []
+    const tags = {}
+    const fields = {}
+    for (const propertyName in json) {
+      if (/^[a-zA-Z0-9]/.test(propertyName)) {
+        tags[propertyName] = json[propertyName]
+      } else if (/^__[a-zA-Z0-9]/.test(propertyName)) {
+        const fieldName = propertyName.substring(2)
+        fields[fieldName] = json[propertyName]
+      }
+    }
+    if (Object.keys(fields).length === 0) {
+      fields.count = 1 // influxdb must have at least one field, use count=1i if no fileds in input
+    }
     return { measurement, tags, fields }
   }
 

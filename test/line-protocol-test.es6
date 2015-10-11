@@ -109,5 +109,19 @@ describe('LineProtocol', () => {
     it('should parse the measurement name', () => {
       lp.parseInput({ _name: 'abc' }).measurement.should.equal('abc')
     })
+
+    it('should parse the tags', () => {
+      lp.parseInput({ _name: 'test', abc: 'cde', efg: 'xzy', '___ignore': 'me' })
+        .tags.should.eql({ abc: 'cde', efg: 'xzy' })
+    })
+
+    it('should parse the fields', () => {
+      lp.parseInput({ _name: 'test', __f1: 1, __f2: 'v2', __f3: false, __f4: -1.2 })
+        .fields.should.eql({ f1: 1, f2: 'v2', f3: false, f4: -1.2 })
+    })
+
+    it('should add count if no fields in input', () => {
+      lp.parseInput({ _name: 'test' }).fields.should.eql({ count: 1 })
+    })
   })
 })
