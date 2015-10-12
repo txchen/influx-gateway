@@ -1,10 +1,11 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import awrap from 'awrap'
-import rq from 'request-promise'
+import rp from 'request-promise'
 import url from 'url'
 import qs from 'querystring'
 import LineProtocol from './line-protocol'
+import { IGWValidationError } from './error'
 
 export default (config) => {
   const router = new express.Router()
@@ -19,14 +20,14 @@ export default (config) => {
     }
 
     // ping influxdb to get influx version
-    const pingResult = await rq({ uri: url.resolve(config.influx_url, 'ping'), resolveWithFullResponse: true })
+    const pingResult = await rp({ uri: url.resolve(config.influx_url, 'ping'), resolveWithFullResponse: true })
     data.influxVersion = pingResult.headers['x-influxdb-version']
 
     // then list series to verify database connection
     let queryUrl = url.resolve(config.influx_url, 'query')
-    queryUrl = queryUrl + '?' + qs.stringify({ q: 'show series', db: config.db_name})
+    queryUrl = queryUrl + '?' + qs.stringify({ q: 'show series', db: config.db_name })
     try {
-      const queryResult = await rq({ uri: queryUrl, resolveWithFullResponse: true })
+      const queryResult = await rp({ uri: queryUrl, resolveWithFullResponse: true })
       const seriesResult = JSON.parse(queryResult.body).results[0]
       data.seriesCount = seriesResult.hasOwnProperty('series') ? seriesResult.series.length : 0
       res.json(data)
@@ -38,7 +39,19 @@ export default (config) => {
 
   router.post('/event', awrap(async (req, res) => {
     const message = req.body
-    res.send(lp.tranform(message))
+    let lpMessage = ''
+    try {
+      lpMessage = lp.tranform(message)
+    } catch (err) {
+      if (err instanceof IGWValidationError) {
+        err.statusCode = 400
+      }
+      throw err
+    }
+    let postUrl = url.resolve(config.influx_url, 'write')
+    postUrl = postUrl + '?' + qs.stringify({ db: config.db_name })
+    await rp.post({ url: postUrl, resolveWithFullResponse: true, form: lpMessage })
+    res.send(lpMessage)
   }))
 
   return router

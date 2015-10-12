@@ -5,6 +5,7 @@ import api from './api'
 export default (config) => {
   const app = express()
   app.set('trust proxy', 'loopback')
+  app.set('etag', false)
 
   // TODO: use bunyan
   app.use(logger('dev'))
@@ -14,7 +15,7 @@ export default (config) => {
   // error handling, should be after normal middleware
   app.use((err, req, res, _next) => {
     // TODO: trace error
-    res.status(err.status || 500)
+    res.status(err.statusCode || 500)
     const output = {
       reason: err.message,
     }
