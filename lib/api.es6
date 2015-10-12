@@ -44,6 +44,7 @@ export default (config) => {
       lpMessage = lp.tranform(message)
     } catch (err) {
       if (err instanceof IGWValidationError) {
+        req.log.warn('input validation failed: ' + err.message)
         err.statusCode = 400
       }
       throw err
