@@ -98,13 +98,7 @@ class LineProtocol {
   }
 
   isDictionary(obj) {
-    if (!obj) {
-      return false
-    }
-    if (Array.isArray(obj)) {
-      return false
-    }
-    if (obj.constructor !== Object) {
+    if (!obj || Array.isArray(obj) || obj.constructor !== Object) {
       return false
     }
     return true
