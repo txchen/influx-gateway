@@ -67,5 +67,8 @@ Tags are also optional.
 
 ## Changelog
 
+**2015-10-13** `0.1.3`
+Upgrade dependencies.
+
 **2015-10-11** `0.1.2`
 1st working version.
