@@ -1,5 +1,9 @@
 # influx-gateway
 
+[![Build Status](https://travis-ci.org/txchen/influx-gateway.svg)](https://travis-ci.org/txchen/influx-gateway)
+[![NPM version](http://img.shields.io/npm/v/influx-gateway.svg?style=flat-square)](https://www.npmjs.com/package/influx-gateway)
+[![Code Climate](https://codeclimate.com/github/txchen/influx-gateway/badges/gpa.svg)](https://codeclimate.com/github/txchen/eslint-plugin-riot)
+
 InfluxDB had a json protocol but it will be deprecated, this service helps you to write json into influxDB.
 
 ## How to deploy
@@ -55,7 +59,7 @@ Field name starts with `__[a-zA-Z0-9]`, and remaining part use the same rule as 
 
 Field value can be number, boolean or string.
 
-Fields are optional, if no fields in the payload, igw will add count=1i automatically.
+Fields are optional, if no fields in the payload, igw will add `count=1i` automatically.
 
 Tag name and tag value also should follow the measurement name regex.
 
