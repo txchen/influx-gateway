@@ -32,6 +32,10 @@ $ igw -c [configfile]
 
 Config is quite straight forward. The only tricky part is: if your influxdb requires authentication, you should include the username and password in the `influx_url`.
 
+## Authentication
+
+Influx-gateway does not provide authentication, you can put a proxy in front of igw. For example, an nginx instance with basic auth check enabled.
+
 ## API
 
 * GET /ping
@@ -64,6 +68,48 @@ Fields are optional, if no fields in the payload, igw will add `count=1i` automa
 Tag name and tag value also should follow the measurement name regex.
 
 Tags are also optional.
+
+* POST /query
+
+This API accepts influxdb query and returns json result. Query must start with `SELECT`.
+
+Example payload:
+
+```json
+{
+  "query": "SELECT value FROM cpu_load_short WHERE region='us-west'",
+}
+```
+
+Example result:
+
+```json
+{
+  "series": [
+    {
+      "name": "cpu_load_short",
+      "columns": [
+        "time",
+        "value"
+      ],
+      "values": [
+        [
+          "2015-01-29T21:55:43.702900257Z",
+          0.55
+        ],
+        [
+          "2015-01-29T21:55:43.702900257Z",
+          23422
+        ],
+        [
+          "2015-06-11T20:46:02Z",
+          0.64
+        ]
+      ]
+    }
+  ]
+}
+```
 
 ## Changelog
 
