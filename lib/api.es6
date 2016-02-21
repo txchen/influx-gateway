@@ -37,6 +37,10 @@ export default (config) => {
     }
   }))
 
+  router.post('/query', awrap(async (req, res) => {
+    res.status(200).json({})
+  }))
+
   router.post('/event', awrap(async (req, res) => {
     const message = req.body
     let lpMessage = ''
