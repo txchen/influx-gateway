@@ -77,7 +77,7 @@ Example payload:
 
 ```json
 {
-  "query": "SELECT value FROM cpu_load_short WHERE region='us-west'",
+  "q": "SELECT value FROM cpu_load_short WHERE region='us-west'",
 }
 ```
 

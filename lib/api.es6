@@ -38,7 +38,16 @@ export default (config) => {
   }))
 
   router.post('/query', awrap(async (req, res) => {
-    res.status(200).json({})
+    const query = req.body.q
+    if (!query || !query.toLowerCase().startsWith('select')) {
+      res.status(400).json({ error: 'invalid query' })
+      return
+    }
+    let queryUrl = url.resolve(config.influx_url, 'query')
+    queryUrl = queryUrl + '?' + qs.stringify({ db: config.db_name, q: query })
+    const queryResult = await rp({ url: queryUrl, resolveWithFullResponse: true })
+    const seriesResult = JSON.parse(queryResult.body).results[0]
+    res.json(seriesResult)
   }))
 
   router.post('/event', awrap(async (req, res) => {

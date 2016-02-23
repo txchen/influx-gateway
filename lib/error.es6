@@ -8,8 +8,8 @@ class ExtendableError extends Error {
 }
 
 class IGWValidationError extends ExtendableError {
-  constructor(m) {
-    super(m)
+  constructor(msg) {
+    super(msg)
   }
 }
 
