@@ -113,6 +113,9 @@ Example result:
 
 ## Changelog
 
+**2016-02-23** `0.1.4`
+Add query api.
+
 **2015-10-13** `0.1.3`
 Upgrade dependencies.
 
