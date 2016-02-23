@@ -10,6 +10,7 @@ var defaultConfig = require('./defaultConfig.es6')
 var program = require('commander')
 var extend = require('extend')
 var fs = require('fs')
+var pjson = require('./package.json')
 
 function getConfig(configFile) {
   try {
@@ -22,7 +23,7 @@ function getConfig(configFile) {
 }
 
 function main() {
-  program.version('0.0.1')
+  program.version(pjson.version)
     .option('-c, --config [config]', 'config file location')
   program.command('genconfig')
     .description('print config tempalte')
