@@ -85,6 +85,7 @@ Example result:
 
 ```json
 {
+  "latency": 230,
   "series": [
     {
       "name": "cpu_load_short",

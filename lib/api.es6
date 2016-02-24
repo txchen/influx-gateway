@@ -39,6 +39,7 @@ export default (config) => {
 
   router.post('/query', awrap(async (req, res) => {
     const query = req.body.q
+    const startTime = new Date()
     if (!query || !query.toLowerCase().startsWith('select')) {
       res.status(400).json({ error: 'invalid query' })
       return
@@ -47,6 +48,7 @@ export default (config) => {
     queryUrl = queryUrl + '?' + qs.stringify({ db: config.db_name, q: query })
     const queryResult = await rp({ url: queryUrl, resolveWithFullResponse: true })
     const seriesResult = JSON.parse(queryResult.body).results[0]
+    seriesResult.latency = new Date() - startTime
     res.json(seriesResult)
   }))
 

@@ -7,10 +7,10 @@ require('babel/register')({
   ignore: /influx-gateway\/node_modules/
 })
 var defaultConfig = require('./defaultConfig.es6')
+var pjson = require('./package.json')
 var program = require('commander')
 var extend = require('extend')
 var fs = require('fs')
-var pjson = require('./package.json')
 
 function getConfig(configFile) {
   try {
