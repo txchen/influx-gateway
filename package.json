@@ -1,6 +1,6 @@
 {
   "name": "influx-gateway",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "an influxdb gateway, takes json as input",
   "main": "index.js",
   "scripts": {

@@ -114,6 +114,9 @@ Example result:
 
 ## Changelog
 
+**2016-02-24** `0.1.5`
+Add query latency in response.
+
 **2016-02-23** `0.1.4`
 Add query api.
 
